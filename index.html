@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>The Island - Alejandro Scuro Rossi | Teamwork Dynamics</title>
-    <meta name="description" content="The Island: A group dynamic created by Alejandro Scuro Rossi.">
-    <meta name="keywords" content="Alejandro Scuro Rossi, teamwork, human resources, group dynamic, leadership, roleplay, survival simulation, competency assessment">
+    <title>The Island - Alejandro Scuro Rossi | Visual Support Tool</title>
+    <meta name="description" content="The Island: A visual support tool for group dynamics created by Alejandro Scuro Rossi.">
+    <meta name="keywords" content="Alejandro Scuro Rossi, teamwork, human resources, group dynamic, leadership, roleplay, survival simulation, visual aid">
     <meta name="author" content="Alejandro Scuro Rossi">
     
     <style>
@@ -80,22 +80,16 @@ function render() {
     if (Game.paso === 1) {
         ui.innerHTML = `
         <div class="card" style="text-align:center">
-        <div style="font-size: 0.75rem; color: #636e72; text-align: left; background: #f8f9fa; padding: 15px; border: 1px solid #dfe6e9; border-radius: 8px; margin: 20px 0; line-height: 1.4;">
-    <strong>⚠️ LEGAL DISCLAIMER & TERMS OF USE:</strong><br>
-    This tool, "The Island," is an <strong>experimental and educational prototype</strong> developed by <strong>Alejandro Scuro Rossi</strong>. 
-    <br><br>
-    <strong>No Warranty:</strong> The software is provided "as is," without warranty of any kind. The author does not guarantee the accuracy, reliability, or suitability of the simulation for professional recruitment or psychological assessment.
-    <br><br>
-    <strong>Limitation of Liability:</strong> In no event shall the author be liable for any hiring decisions, talent management outcomes, or any damages arising from the use of this tool. This dynamic is intended as a visual aid and must be interpreted by a qualified professional. 
-    <br><br>
-    By clicking <strong>"Start"</strong>, you acknowledge the experimental nature of this project and agree to use it at your own risk.
-</div>
             <h1>🏝️ THE ISLAND</h1>
             <p style="font-weight:bold; color:var(--primary); margin-bottom:0;">Author: Alejandro Scuro Rossi</p>
-            <p style="font-size: 0.9em; color: #666;">Group dynamic.</p>
+            <p style="font-size: 0.9em; color: #666;"><strong>A Visual Support Tool for Group Dynamics</strong></p>
             
             <div class="manual-container">
                 <h3>📜 Survival Guide</h3>
+                <p style="font-style: italic; font-size: 0.85em; color: #555;">
+                    Notice: This application is a <strong>digital scoreboard and visual aid</strong>. 
+                    It does not provide psychological scores or automated hiring recommendations.
+                </p>
                 <div class="manual-grid">
                     <div>
                         <p><b>Goal:</b> Gather resources before finishing Step 8.</p>
@@ -133,7 +127,21 @@ function render() {
                     </div>
                 </div>
             </div>
-            <button onclick="Game.paso=2; render();">Start Dynamic</button>
+
+            <div style="font-size: 0.75rem; color: #636e72; text-align: left; background: #f8f9fa; padding: 15px; border: 1px solid #dfe6e9; border-radius: 8px; margin: 20px 0; line-height: 1.4;">
+                <strong>⚠️ LEGAL DISCLAIMER & TERMS OF USE:</strong><br>
+                This tool, "The Island," is an <strong>experimental and educational prototype</strong> developed by <strong>Alejandro Scuro Rossi</strong>. 
+                <br><br>
+                <strong>Visual Support Only:</strong> This software is strictly a visual aid for facilitators. It does not perform automated assessments of leadership, teamwork, or strategy. All observations must be interpreted by a qualified professional.
+                <br><br>
+                <strong>No Warranty:</strong> The software is provided "as is," without warranty of any kind. The author does not guarantee the accuracy, reliability, or suitability of the simulation for professional recruitment.
+                <br><br>
+                <strong>Limitation of Liability:</strong> In no event shall the author be liable for any hiring decisions, talent management outcomes, or any damages arising from the use of this tool. 
+                <br><br>
+                By clicking <strong>"Start Session"</strong>, you acknowledge the experimental nature of this project and agree to use it at your own risk.
+            </div>
+
+            <button onclick="Game.paso=2; render();">Start Session</button>
         </div>`;
     }
     else if (Game.paso === 2) {
