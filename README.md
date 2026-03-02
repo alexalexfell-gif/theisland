@@ -18,6 +18,7 @@ This tool, **"The Island,"** is an **experimental and educational prototype** de
 2. **Limitation of Liability:** In no event shall the author be liable for any hiring decisions, talent management outcomes, performance evaluations, or any damages arising from the use of this tool. 
 3. **Professional Interpretation:** This dynamic is intended exclusively as a visual aid. Any conclusions drawn from its use must be interpreted and validated by a qualified professional in the field.
 4. **Project Nature:** By using this software, the user acknowledges its experimental nature and agrees to use it at their own risk.
+5. The author assumes no liability for uses of the software outside the educational or group facilitation context.
 
 ---
 
