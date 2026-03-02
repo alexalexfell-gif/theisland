@@ -7,6 +7,7 @@ THE ISLAND - Visual Support Tool
 "The Island" is an interactive web application designed as a **visual support resource for group dynamics**. The tool allows a facilitator to manage a turn-based survival simulation, making it easy to track resources, roles, and participant actions in a gamified environment.
 
 This application runs entirely in the browser (**Client-Side**), ensuring data privacy as no information is stored or sent to external servers.
+This project is an experimental simulation tool and is not intended for operational decision-making.
 
 ---
 
