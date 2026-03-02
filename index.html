@@ -86,10 +86,6 @@ function render() {
             
             <div class="manual-container">
                 <h3>📜 Survival Guide</h3>
-                <p style="font-style: italic; font-size: 0.85em; color: #555;">
-                    Notice: This application is a <strong>digital scoreboard and visual aid</strong>. 
-                    It does not provide psychological scores or automated hiring recommendations.
-                </p>
                 <div class="manual-grid">
                     <div>
                         <p><b>Goal:</b> Gather resources before finishing Step 8.</p>
@@ -109,32 +105,42 @@ function render() {
                     <div>
                         <p><b>Dynamic Phases:</b></p>
                         <ol class="phase-list">
-                            <li><b>Registration & Role Assignment:</b> Define teams and assign specific skills.</li>
-                            <li><b>Planning:</b> Initial equipment selection.</li>
-                            <li><b>Night Theft:</b> Strategic action where teams choose to attack or defend.</li>
-                            <li><b>The Pact:</b> Two teams unite for rewards; the third seeks revenge.</li>
-                            <li><b>The Fight:</b> Direct confrontation for resources.</li>
-                            <li><b>Gathering:</b> Turn-based resource acquisition.</li>
-                            <li><b>Market:</b> Final stage for trading and bartering.</li>
+                            <li>Registration & Roles</li>
+                            <li>Planning</li>
+                            <li>Night Theft</li>
+                            <li>The Pact</li>
+                            <li>The Fight</li>
+                            <li>Gathering</li>
+                            <li>Market</li>
                         </ol>
                     </div>
                 </div>
             </div>
 
-            <div style="font-size: 0.75rem; color: #636e72; text-align: left; background: #f8f9fa; padding: 15px; border: 1px solid #dfe6e9; border-radius: 8px; margin: 20px 0; line-height: 1.4;">
-                <strong>⚠️ LEGAL DISCLAIMER & TERMS OF USE:</strong><br>
-                This tool, "The Island," is an <strong>experimental and educational prototype</strong> developed by <strong>Alejandro Scuro Rossi</strong>. 
-                <br><br>
-                <strong>Visual Support Only:</strong> This software is strictly a visual aid for facilitators. It does not perform automated assessments of leadership, teamwork, or strategy. All observations must be interpreted by a qualified professional.
-                <br><br>
-                <strong>No Warranty:</strong> The software is provided "as is," without warranty of any kind. The author does not guarantee the accuracy, reliability, or suitability of the simulation for professional recruitment.
-                <br><br>
-                <strong>Limitation of Liability:</strong> In no event shall the author be liable for any hiring decisions, talent management outcomes, or any damages arising from the use of this tool. 
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;">
+            <div style="font-size: 0.75rem; color: #636e72; text-align: left; background: #f8f9fa; padding: 20px; border: 1px solid #dfe6e9; border-radius: 8px; margin: 20px 0; line-height: 1.5; max-height: 400px; overflow-y: auto;">
+                <strong>⚠️ LEGAL DISCLAIMER & TERMS OF USE OF "THE ISLAND" ⚠️</strong><br><br>
+                This tool, "The Island," is an experimental and educational prototype developed by Alejandro Scuro Rossi.<br><br>
+                <strong>1. Visual Support and Non-Evaluative:</strong> This software is strictly a visual aid for facilitators. It does not perform automated assessments of leadership, teamwork, or strategy. All observations must be interpreted by a qualified professional.<br><br>
+                <strong>2. No Warranty:</strong> The software is provided "as is," without warranty of any kind. The author does not guarantee the accuracy, reliability, or suitability of the simulation for professional recruitment processes.<br><br>
+                <strong>3. Limitation of Liability:</strong> In no event shall the author be liable for hiring decisions, talent management outcomes, or any damages arising from the use of this tool.<br><br>
+                <strong>4. DATA PROTECTION AND FACILITATOR RESPONSIBILITIES (GDPR):</strong><br>
+                "The Island" temporarily processes the following participant data:
+                <ul>
+                    <li>Participant's name.</li>
+                    <li>Decisions made during the dynamic (within the assigned role).</li>
+                </ul>
+                This data is stored exclusively in each participant's web browser and is automatically deleted upon closing the tab or browser. "The Island" does not save or transmit this data to any external server nor does it keep it permanently.<br><br>
+                As a facilitator, it is your EXCLUSIVE and MANDATORY responsibility to:
+                <ul>
+                    <li>Clearly inform all participants, before starting the dynamic, about: what data is collected temporarily (their name and the decisions they make in the game), where it is stored (only in their browser), when it is deleted (automatically when the session is closed), and the purpose of this temporary collection (observation of group interaction by the facilitator).</li>
+                    <li>Obtain explicit consent from each participant for this temporary processing of their data. This can be via a recorded verbal statement, a form, or a checkbox.</li>
+                    <li>Ensure that any subsequent observation, recording, or analysis you perform based on the dynamic (for example, taking notes on participant behavior) complies with applicable data protection regulations (GDPR). You are solely responsible for such additional processing.</li>
+                </ul>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
                 <div style="display: flex; align-items: flex-start; gap: 10px;">
-                    <input type="checkbox" id="consent_check" style="width: 20px; height: 20px; cursor: pointer;" onchange="document.getElementById('start_btn').disabled = !this.checked">
+                    <input type="checkbox" id="consent_check" style="width: 24px; height: 24px; cursor: pointer;" onchange="document.getElementById('start_btn').disabled = !this.checked">
                     <label for="consent_check" style="cursor: pointer; font-weight: bold; color: #2c3e50;">
-                        I confirm that participants have been informed and grant their consent for the temporary recording of their data in this dynamic.
+                        I have read the legal disclaimer and confirm that participants have granted their consent in accordance with GDPR.
                     </label>
                 </div>
             </div>
@@ -182,7 +188,7 @@ function render() {
         const e = Game.equipos[eqIdx];
         let extra = (e.inventario.some(it => it.id === 'guantes') && !e.yaUsoGuantes) ? 1 : 0;
         const cant = Game.recoleccion.secuencia[tIdx].cant + extra;
-        ui.innerHTML = `<div class="card"><h2>Step 7: Gathering</h2><div class="grid">${Game.equipos.map((eq, i) => `<div class="card ${eqIdx===i?'active-turn':''}"><h3>${eq.nombre}</h3><span class="player-name-display">👤 Gatherer: ${eq.rolesNombres['Gatherer'] || 'Not assigned'}</span>${eqIdx===i ? `<select id="rec_sel" multiple style="height:120px;">${CATALOGO_BASE.map(o=>`<option value="${o.id}">${o.n}</option>`).join("")}</select><button onclick="ejecutarTurnoRecoleccion(${i}, ${cant})">Gather (${cant})</button>` : `<p>Waiting...</p>`}</div>`).join("")}</div></div>`;
+        ui.innerHTML = `<div class="card"><h2>Step 7: Gathering</h2><div class="grid">${Game.equipos.map((eq, i) => `<div class="card ${eqIdx===i?'active-turn':''}" style="opacity:${eqIdx===i?'1':'0.5'}"><h3>${eq.nombre}</h3><span class="player-name-display">👤 Gatherer: ${eq.rolesNombres['Gatherer'] || 'Not assigned'}</span>${eqIdx===i ? `<select id="rec_sel" multiple style="height:120px;">${CATALOGO_BASE.map(o=>`<option value="${o.id}">${o.n}</option>`).join("")}</select><button onclick="ejecutarTurnoRecoleccion(${i}, ${cant})">Gather (${cant})</button>` : `<p>Waiting...</p>`}</div>`).join("")}</div></div>`;
     }
     else if (Game.paso === 8) {
         ui.innerHTML = `<div class="card"><h2>Step 8: Market</h2><div class="grid">${Game.equipos.map((e, i) => {
@@ -196,7 +202,7 @@ function render() {
             const p = inv.reduce((acc, i) => { acc[i.c] = (acc[i.c] || 0) + (i.p || 0); return acc; }, { ali:0, uti:0, ori:0 });
             const win = p.ali >= 4 && p.uti >= 3 && p.ori >= 2;
             return `<div class="card" style="border-top: 5px solid ${win?'#27ae60':'#e74c3c'}"><h3>${e.nombre}</h3><h1 style="color:${win?'#27ae60':'#e74c3c'}">${win?'SURVIVES':'DIES'}</h1><p>🍎${p.ali}/4 🛠${p.uti}/3 🧭${p.ori}/2</p></div>`;
-        }).join("")}</div><button onclick="location.reload()">Restart</button></div>`;
+        }).join("")}</div><p style="font-size:0.8em; color:#666; margin-top:20px;">Note: Upon closing this tab, all recorded data will be permanently deleted.</p><button onclick="location.reload()">Restart</button></div>`;
     }
 }
 
@@ -279,6 +285,7 @@ function saveInv3() {
 function saveRoleInv() {
     for(let i=0; i<3; i++) {
         const s = Array.from(document.getElementById(`ro_${i}`).selectedOptions);
+        if(s.length < 1) return alert(`Team ${Game.equipos[i].nombre} must select role items.`);
         s.forEach(o => Game.equipos[i].inventario.push({...ROLES_OBJ.find(x => x.id === o.value)}));
     }
     Game.paso = 4; render();
@@ -295,10 +302,16 @@ function loadNightItems(eq) {
 function processNightRobbery() {
     Game.equipos.forEach((e, i) => {
         if (document.getElementById(`n_act_${i}`).value === 'atk') {
-            const v = parseInt(document.getElementById(`n_vic_${i}`).value);
+            const vSelect = document.getElementById(`n_vic_${i}`);
+            if(!vSelect.value) return;
+            const v = parseInt(vSelect.value);
             const opts = Array.from(document.getElementById(`n_obj_${i}`).selectedOptions).map(o => parseInt(o.value)).sort((a,b)=>b-a);
             if (document.getElementById(`n_act_${v}`).value !== 'def') {
-                opts.forEach(idx => Game.equipos[i].inventario.push(Game.equipos[v].inventario.splice(idx, 1)[0]));
+                opts.forEach(idx => {
+                    if(Game.equipos[v].inventario[idx]) {
+                        Game.equipos[i].inventario.push(Game.equipos[v].inventario.splice(idx, 1)[0]);
+                    }
+                });
             }
         }
     });
@@ -310,6 +323,7 @@ function toggleAtkControls(eq, atk) { document.getElementById(`atk_ctrls_${eq}_$
 function handleLuchaAtk(eq, atk, win) {
     if(!win) { document.getElementById(`atk_block_${eq}_${atk}`).innerHTML = "FAIL"; return; }
     const vic = document.getElementById(`vic_sel_${eq}_${atk}`).value;
+    if(!vic) return;
     document.getElementById(`atk_ctrls_${eq}_${atk}`).style.display = "none";
     document.getElementById(`rob_area_${eq}_${atk}`).style.display = "block";
     document.getElementById(`item_to_rob_${eq}_${atk}`).innerHTML = Game.equipos[vic].inventario.map((it, idx) => it.type !== 'rol' ? `<option value="${idx}">${it.n}</option>` : '').join("");
@@ -346,7 +360,8 @@ function updateTradeProposalUI(eqIdx) {
 }
 
 function ejecutarIntercambioDirecto(eqIdx) {
-    const pIdx = document.getElementById(`m_partner_${eqIdx}`).value;
+    const pIdxSelect = document.getElementById(`m_partner_${eqIdx}`);
+    const pIdx = pIdxSelect.value;
     const gIdx = document.getElementById(`m_give_${eqIdx}`).value;
     const pgIdx = document.getElementById(`m_partner_give_${eqIdx}`).value;
     if(gIdx === "" || pgIdx === "") return;
@@ -360,7 +375,7 @@ function ejecutarIntercambioDirecto(eqIdx) {
 function renderMaletinUI(eqIdx) {
     const e = Game.equipos[eqIdx];
     if (!e.inventario.some(it => it.id === 'maletin') && !e.maletin.some(it => it.id === 'maletin')) return '';
-    return `<div class="maletin-box"><b>Briefcase (${e.maletin.length}/2)</b><br>${e.maletin.length < 2 ? `<select id="to_m_${eqIdx}">${e.inventario.map((it, idx) => it.type !== 'rol' ? `<option value="${idx}">${it.n}</option>` : '').join("")}</select><button onclick="addToMaletin(${eqIdx})" style="padding:4px">Store</button>` : 'Full'}</div>`;
+    return `<div class="maletin-box"><b>🧳 Briefcase (${e.maletin.length}/2)</b><br>${e.maletin.length < 2 ? `<select id="to_m_${eqIdx}">${e.inventario.map((it, idx) => it.type !== 'rol' ? `<option value="${idx}">${it.n}</option>` : '').join("")}</select><button onclick="addToMaletin(${eqIdx})" style="padding:4px; font-size:0.8em;">Store</button>` : 'Full'}</div>`;
 }
 
 function addToMaletin(eqIdx) {
