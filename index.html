@@ -216,13 +216,19 @@ function render() {
 
 function generateFieldsHTML(n) {
     let roles;
-    if (n == 5) roles = ["Thief", "Diplomat", "Fighter", "Gatherer", "Trader"];
-    else if (n == 4) roles = ["Thief/Diplomat", "Fighter", "Gatherer", "Trader"];
-    else roles = ["Thief/Diplomat", "Fighter/Gatherer", "Trader"];
+    if (n == 5) {
+        roles = ["Thief", "Diplomat", "Fighter", "Gatherer", "Trader"];
+    } else if (n == 4) {
+        roles = ["Thief/Diplomat", "Fighter", "Gatherer", "Trader"];
+    } else {
+        roles = ["Thief/Diplomat", "Fighter/Gatherer", "Trader"];
+    }
     return roles.map(r => `<span class="role-tag">${r}</span><input type="text" class="player-input" data-role="${r}" placeholder="Name...">`).join("");
 }
 
-function updateFieldsUI(i) { document.getElementById(`fields_${i}`).innerHTML = generateFieldsHTML(parseInt(document.getElementById(`sz_${i}`).value)); }
+function updateFieldsUI(i) { 
+    document.getElementById(`fields_${i}`).innerHTML = generateFieldsHTML(parseInt(document.getElementById(`sz_${i}`).value)); 
+}
 
 function saveRegistration() {
     for(let i=0; i<3; i++) {
