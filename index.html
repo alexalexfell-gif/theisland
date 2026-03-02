@@ -178,9 +178,16 @@ function render() {
         ui.innerHTML = `<div class="card"><h2>Step 5: The Pact</h2><p class="instruction">Diplomats negotiate. Select participants and items (Ctrl+Click).</p><div class="grid">${Game.equipos.map((e,i)=>`<div class="card"><h3>${e.nombre}</h3><span class="player-name-display">👤 Diplomat: ${e.rolesNombres['Diplomat'] || 'Not assigned'}</span>${renderMaletinUI(i)}<input type="checkbox" class="p-check" value="${i}" id="chk${i}" onchange="updatePactUI()"><label for="chk${i}"> Joins</label><div id="pact_choice_${i}" style="display:none; margin-top:10px;"><b>Choice:</b><select id="pact_sel_${i}" multiple style="height:80px;">${PACTO_OBJ.map(o=>`<option value="${o.id}">${o.n}</option>`).join("")}</select></div></div>`).join("")}</div><div id="pacto-area"></div><button onclick="processPact()">Close Pact</button></div>`;
     }
     else if (Game.paso === 6) {
-        ui.innerHTML = `<div class="card"><h2>Step 6: The Fight</h2><p class="instruction">Attacks with Rocks, papers, scissors. Excluded team has +1 attack.</p><div class="grid">${Game.equipos.map((e, i) => {
+        let pactTeams = Array.from(document.querySelectorAll('.p-check:checked')).map(c => parseInt(c.value));
+        ui.innerHTML = `<div class="card"><h2>Step 6: The Fight</h2><p class="instruction">Attacks with Rocks, papers, scissors. Excluded team has +1 attack. Allies cannot attack each other.</p><div class="grid">${Game.equipos.map((e, i) => {
             let numAtks = 1 + (e.inventario.some(it => it.id === 'machete') ? 1 : 0) + (e.venganza ? 1 : 0);
-            return `<div class="card"><h3>${e.nombre} ${e.venganza?'🔥':''}</h3><span class="player-name-display">👤 Fighter: ${e.rolesNombres['Fighter'] || 'Not assigned'}</span><div id="lucha_area_${i}">${Array.from({length: numAtks}).map((_, a) => `<div class="trade-slot" id="atk_block_${i}_${a}"><b>Attack ${a+1}:</b><select id="vic_sel_${i}_${a}" onchange="toggleAtkControls(${i}, ${a})"><option value="">Victim?</option>${Game.equipos.map((v,vi) => i === vi ? '' : `<option value="${vi}">${v.nombre}</option>`).join("")}</select><div id="atk_ctrls_${i}_${a}" style="display:none;"><button onclick="handleLuchaAtk(${i}, ${a}, true)">SUCCESS</button><button onclick="handleLuchaAtk(${i}, ${a}, false)" style="background:#95a5a6">FAIL</button></div><div id="rob_area_${i}_${a}" style="display:none;"><select id="item_to_rob_${i}_${a}"></select><button onclick="finishLuchaRob(${i}, ${a})">Steal</button></div></div>`).join("")}</div></div>`;
+            let validVictims = Game.equipos.map((v, vi) => {
+                if (i === vi) return null;
+                if (pactTeams.includes(i) && pactTeams.includes(vi)) return null; 
+                return `<option value="${vi}">${v.nombre}</option>`;
+            }).filter(opt => opt !== null).join("");
+
+            return `<div class="card"><h3>${e.nombre} ${e.venganza?'🔥':''}</h3><span class="player-name-display">👤 Fighter: ${e.rolesNombres['Fighter'] || 'Not assigned'}</span><div id="lucha_area_${i}">${Array.from({length: numAtks}).map((_, a) => `<div class="trade-slot" id="atk_block_${i}_${a}"><b>Attack ${a+1}:</b><select id="vic_sel_${i}_${a}" onchange="toggleAtkControls(${i}, ${a})"><option value="">Victim?</option>${validVictims}</select><div id="atk_ctrls_${i}_${a}" style="display:none;"><button onclick="handleLuchaAtk(${i}, ${a}, true)">SUCCESS</button><button onclick="handleLuchaAtk(${i}, ${a}, false)" style="background:#95a5a6">FAIL</button></div><div id="rob_area_${i}_${a}" style="display:none;"><select id="item_to_rob_${i}_${a}"></select><button onclick="finishLuchaRob(${i}, ${a})">Steal</button></div></div>`).join("")}</div></div>`;
         }).join("")}</div><button onclick="Game.paso=7; render()">Next</button></div>`;
     }
     else if (Game.paso === 7) {
@@ -203,7 +210,7 @@ function render() {
             const p = inv.reduce((acc, i) => { acc[i.c] = (acc[i.c] || 0) + (i.p || 0); return acc; }, { ali:0, uti:0, ori:0 });
             const win = p.ali >= 4 && p.uti >= 3 && p.ori >= 2;
             return `<div class="card" style="border-top: 5px solid ${win?'#27ae60':'#e74c3c'}"><h3>${e.nombre}</h3><h1 style="color:${win?'#27ae60':'#e74c3c'}">${win?'SURVIVES':'DIES'}</h1><p>🍎${p.ali}/4 🛠${p.uti}/3 🧭${p.ori}/2</p></div>`;
-        }).join("")}</div><p style="font-size:0.8em; color:#666; margin-top:20px;">Note: Upon closing this tab, all recorded data will be permanently deleted.</p><button onclick="location.reload()">Restart</button></div>`;
+        }).join("")}</div><p style="font-size:0.8em; color:#666; margin-top:20px;">Note: Data is deleted upon closing this tab.</p><button onclick="location.reload()">Restart</button></div>`;
     }
 }
 
@@ -238,15 +245,13 @@ function updatePactUI() {
     let ps = Array.from(document.querySelectorAll('.p-check:checked')).map(c=>parseInt(c.value));
     Game.equipos.forEach((_, i) => {
         const choiceDiv = document.getElementById(`pact_choice_${i}`);
-        if(choiceDiv) choiceDiv.style.display = ps.includes(i) || ps.length === 2 ? "block" : "none";
+        if(choiceDiv) choiceDiv.style.display = "block";
         const sel = document.getElementById(`pact_sel_${i}`);
         if(sel) sel.multiple = ps.includes(i);
     });
     if(ps.length === 2) {
         let ex = [0,1,2].find(i=>!ps.includes(i));
         document.getElementById('pacto-area').innerHTML = `<p><b>Pact:</b> ${Game.equipos[ps[0]].nombre} and ${Game.equipos[ps[1]].nombre} (2 items each). <br><span style="color:var(--danger)">Excluded: ${Game.equipos[ex].nombre} (1 item + Revenge).</span></p>`;
-    } else {
-        document.getElementById('pacto-area').innerHTML = "";
     }
 }
 
@@ -257,7 +262,7 @@ function processPact() {
     Game.equipos.forEach((_, i) => {
         const s = Array.from(document.getElementById(`pact_sel_${i}`).selectedOptions);
         const target = ps.includes(i) ? 2 : 1;
-        if(s.length !== target) { alert(`${Game.equipos[i].nombre} must choose ${target} item(s).`); error = true; }
+        if(s.length !== target) { alert(`${Game.equipos[i].nombre} choose ${target}`); error = true; }
     });
     if(error) return;
     Game.equipos.forEach((_, i) => {
@@ -279,7 +284,7 @@ function updateScoreboard() {
 function saveInv3() {
     for(let i=0; i<3; i++) {
         const s = Array.from(document.getElementById(`p_${i}`).selectedOptions);
-        if(s.length!==5) return alert(`Select exactly 5 items for Team ${Game.equipos[i].nombre}`);
+        if(s.length!==5) return alert(`Select 5`);
         Game.equipos[i].inventario = s.map(o => ({...CATALOGO_BASE.find(b => b.id === o.value)}));
     }
     Game.paso = 3.5; render();
@@ -288,7 +293,7 @@ function saveInv3() {
 function saveRoleInv() {
     for(let i=0; i<3; i++) {
         const s = Array.from(document.getElementById(`ro_${i}`).selectedOptions);
-        if(s.length !== 2) return alert(`Team ${Game.equipos[i].nombre} must select exactly 2 role items.`);
+        if(s.length !== 2) return alert(`Select 2 roles items.`);
         s.forEach(o => Game.equipos[i].inventario.push({...ROLES_OBJ.find(x => x.id === o.value)}));
     }
     Game.paso = 4; render();
@@ -342,7 +347,7 @@ function finishLuchaRob(eq, atk) {
 
 function ejecutarTurnoRecoleccion(eqIdx, cant) {
     const opts = Array.from(document.getElementById('rec_sel').selectedOptions);
-    if (opts.length !== cant) return alert(`Choose ${cant} items.`);
+    if (opts.length !== cant) return alert(`Choose ${cant}`);
     opts.forEach(o => {
         const idx = CATALOGO_BASE.findIndex(x => x.id === o.value);
         if(idx !== -1) Game.equipos[eqIdx].inventario.push({...CATALOGO_BASE.splice(idx, 1)[0]});
