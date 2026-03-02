@@ -98,15 +98,24 @@ function render() {
                             <li style="color:var(--primary)">🛠️ 3 Utilities (Uti)</li>
                             <li style="color:var(--info)">🧭 2 Orientation (Ori)</li>
                         </ul>
+                        <div class="obj-guide">
+                            <div><b>🎭 Thief:</b> Steals from non-defenders.</div>
+                            <div><b>🤝 Diplomat:</b> Negotiates the Pact.</div>
+                            <div><b>⚔️ Fighter:</b> Attacks and robs.</div>
+                            <div><b>🎒 Trader:</b> Handles market swaps.</div>
+                            <div><b>🌿 Gatherer:</b> Extra items in step 7.</div>
+                        </div>
                     </div>
                     <div>
                         <p><b>Dynamic Phases:</b></p>
                         <ol class="phase-list">
-                            <li>Registration</li>
-                            <li>Planning</li>
-                            <li>Night Theft</li>
-                            <li>The Pact & Fight</li>
-                            <li>Market</li>
+                            <li><b>Registration & Role Assignment:</b> Define teams and assign specific skills.</li>
+                            <li><b>Planning:</b> Initial equipment selection.</li>
+                            <li><b>Night Theft:</b> Strategic action where teams choose to attack or defend.</li>
+                            <li><b>The Pact:</b> Two teams unite for rewards; the third seeks revenge.</li>
+                            <li><b>The Fight:</b> Direct confrontation for resources.</li>
+                            <li><b>Gathering:</b> Turn-based resource acquisition.</li>
+                            <li><b>Market:</b> Final stage for trading and bartering.</li>
                         </ol>
                     </div>
                 </div>
@@ -121,7 +130,6 @@ function render() {
                 <strong>No Warranty:</strong> The software is provided "as is," without warranty of any kind. The author does not guarantee the accuracy, reliability, or suitability of the simulation for professional recruitment.
                 <br><br>
                 <strong>Limitation of Liability:</strong> In no event shall the author be liable for any hiring decisions, talent management outcomes, or any damages arising from the use of this tool. 
-                <br><br>
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;">
                 <div style="display: flex; align-items: flex-start; gap: 10px;">
                     <input type="checkbox" id="consent_check" style="width: 20px; height: 20px; cursor: pointer;" onchange="document.getElementById('start_btn').disabled = !this.checked">
@@ -134,7 +142,6 @@ function render() {
             <button id="start_btn" disabled onclick="Game.paso=2; render();">Start Session</button>
         </div>`;
     }
-    // ... Rest of the Steps (Registration, Planning, etc.)
     else if (Game.paso === 2) {
         ui.innerHTML = `<div class="card"><h2>Step 2: Player Registration</h2><div class="grid">${Game.equipos.map((e, i) => `
             <div class="card">
