@@ -23,6 +23,7 @@ This tool, **"The Island,"** is an **experimental and educational prototype** de
 6. This tool is not designed or validated for psychological diagnosis, personnel selection, or competency certification.
 7. The software is designed only as a visualization aid and does not generate, store, or infer evaluative metrics about individuals.
 8. The tool does not claim predictive, diagnostic, or evaluative validity.
+9. The author does not guarantee the integrity of the software after it has been modified or redistributed by third parties.
 
 ---
 
