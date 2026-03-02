@@ -112,6 +112,7 @@ function render() {
                             <li>The Fight</li>
                             <li>Gathering</li>
                             <li>Market</li>
+                            <li>Final Results</li>
                         </ol>
                     </div>
                 </div>
@@ -237,13 +238,15 @@ function updatePactUI() {
     let ps = Array.from(document.querySelectorAll('.p-check:checked')).map(c=>parseInt(c.value));
     Game.equipos.forEach((_, i) => {
         const choiceDiv = document.getElementById(`pact_choice_${i}`);
-        if(choiceDiv) choiceDiv.style.display = "block";
+        if(choiceDiv) choiceDiv.style.display = ps.includes(i) || ps.length === 2 ? "block" : "none";
         const sel = document.getElementById(`pact_sel_${i}`);
         if(sel) sel.multiple = ps.includes(i);
     });
     if(ps.length === 2) {
         let ex = [0,1,2].find(i=>!ps.includes(i));
         document.getElementById('pacto-area').innerHTML = `<p><b>Pact:</b> ${Game.equipos[ps[0]].nombre} and ${Game.equipos[ps[1]].nombre} (2 items each). <br><span style="color:var(--danger)">Excluded: ${Game.equipos[ex].nombre} (1 item + Revenge).</span></p>`;
+    } else {
+        document.getElementById('pacto-area').innerHTML = "";
     }
 }
 
@@ -254,7 +257,7 @@ function processPact() {
     Game.equipos.forEach((_, i) => {
         const s = Array.from(document.getElementById(`pact_sel_${i}`).selectedOptions);
         const target = ps.includes(i) ? 2 : 1;
-        if(s.length !== target) { alert(`${Game.equipos[i].nombre} choose ${target}`); error = true; }
+        if(s.length !== target) { alert(`${Game.equipos[i].nombre} must choose ${target} item(s).`); error = true; }
     });
     if(error) return;
     Game.equipos.forEach((_, i) => {
@@ -276,7 +279,7 @@ function updateScoreboard() {
 function saveInv3() {
     for(let i=0; i<3; i++) {
         const s = Array.from(document.getElementById(`p_${i}`).selectedOptions);
-        if(s.length!==5) return alert(`Select 5`);
+        if(s.length!==5) return alert(`Select exactly 5 items for Team ${Game.equipos[i].nombre}`);
         Game.equipos[i].inventario = s.map(o => ({...CATALOGO_BASE.find(b => b.id === o.value)}));
     }
     Game.paso = 3.5; render();
@@ -285,7 +288,7 @@ function saveInv3() {
 function saveRoleInv() {
     for(let i=0; i<3; i++) {
         const s = Array.from(document.getElementById(`ro_${i}`).selectedOptions);
-        if(s.length < 1) return alert(`Team ${Game.equipos[i].nombre} must select role items.`);
+        if(s.length !== 2) return alert(`Team ${Game.equipos[i].nombre} must select exactly 2 role items.`);
         s.forEach(o => Game.equipos[i].inventario.push({...ROLES_OBJ.find(x => x.id === o.value)}));
     }
     Game.paso = 4; render();
@@ -339,7 +342,7 @@ function finishLuchaRob(eq, atk) {
 
 function ejecutarTurnoRecoleccion(eqIdx, cant) {
     const opts = Array.from(document.getElementById('rec_sel').selectedOptions);
-    if (opts.length !== cant) return alert(`Choose ${cant}`);
+    if (opts.length !== cant) return alert(`Choose ${cant} items.`);
     opts.forEach(o => {
         const idx = CATALOGO_BASE.findIndex(x => x.id === o.value);
         if(idx !== -1) Game.equipos[eqIdx].inventario.push({...CATALOGO_BASE.splice(idx, 1)[0]});
