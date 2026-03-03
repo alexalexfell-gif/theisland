@@ -211,6 +211,7 @@ function render() {
     }
     else if (Game.paso === 5) {
         ui.innerHTML = `<div class="card"><h2>Step 5: The Pact</h2><div class="grid">${Game.equipos.map((e,i)=>`<div class="card"><h3>${e.nombre}</h3><span class="player-name-display">👤 Diplomat: ${e.rolesNombres['Diplomat'] || 'Not assigned'}</span>${renderMaletinUI(i)}<input type="checkbox" class="p-check" value="${i}" id="chk${i}" onchange="updatePactUI()"><label for="chk${i}"> Joins</label><div id="pact_choice_${i}" style="display:none; margin-top:10px;"><b>Choice:</b><select id="pact_sel_${i}" multiple style="height:80px;">${PACTO_OBJ.map(o=>`<option value="${o.id}">[${o.c.toUpperCase()}] ${o.n}</option>`).join("")}</select></div></div>`).join("")}</div><div id="pacto-area"></div><button onclick="processPact()">Close Pact</button></div>`;
+        updatePactUI();
     }
     else if (Game.paso === 6) {
         let pactTeams = Array.from(document.querySelectorAll('.p-check:checked')).map(c => parseInt(c.value));
@@ -275,18 +276,27 @@ function saveRegistration() {
 function updatePactUI() {
     let ps = Array.from(document.querySelectorAll('.p-check:checked')).map(c=>parseInt(c.value));
     Game.equipos.forEach((_, i) => {
-        if(document.getElementById(`pact_choice_${i}`)) document.getElementById(`pact_choice_${i}`).style.display = ps.includes(i) ? "block" : "none";
+        const choiceDiv = document.getElementById(`pact_choice_${i}`);
+        if(choiceDiv) {
+            choiceDiv.style.display = ps.includes(i) ? "block" : "none";
+        }
     });
 }
 
 function processPact() {
     let ps = Array.from(document.querySelectorAll('.p-check:checked')).map(c=>parseInt(c.value));
     if(ps.length !== 2) return alert("Select 2 teams.");
+    
     Game.equipos.forEach((_, i) => {
         if(ps.includes(i)) {
-            const s = Array.from(document.getElementById(`pact_sel_${i}`).selectedOptions);
-            s.forEach(opt => Game.equipos[i].inventario.push({...PACTO_OBJ.find(p => p.id === opt.value)}));
-        } else { Game.equipos[i].venganza = true; }
+            const selEl = document.getElementById(`pact_sel_${i}`);
+            const selected = Array.from(selEl.selectedOptions);
+            selected.forEach(opt => {
+                Game.equipos[i].inventario.push({...PACTO_OBJ.find(p => p.id === opt.value)});
+            });
+        } else { 
+            Game.equipos[i].venganza = true; 
+        }
     });
     Game.paso = 6; render();
 }
