@@ -1,10 +1,27 @@
-THE ISLAND - Visual Support Tool
+🌊 THE ISLAND — Visual Interaction Simulation Tool
 
-**Author:** Alejandro Scuro Rossi  
-**Version:** 1.0 (Experimental Prototype)
+Author: Alejandro Scuro Rossi
+Version: 1.0 (Experimental Prototype)
 
-## 📋 Description
-"The Island" is an interactive web application designed as a **visual support resource for group dynamics**. The tool allows a facilitator to manage a turn-based survival simulation, making it easy to track resources, roles, and participant actions in a gamified environment.
+📋 Description
+
+The Island is an experimental web-based interaction visualization prototype designed to explore group behavior inside a constrained scenario.
+
+The application provides a turn-based simulation environment where participants make collective decisions while managing resources and navigating scenario-based challenges.
+
+This tool is intended for educational, experimental, and exploratory purposes only.
+
+Important clarifications:
+
+This is not a recruitment or selection tool.
+
+This is not a psychological, leadership, or performance assessment system.
+
+It does not measure or certify professional competencies.
+
+The simulation operates entirely in the browser and does not collect or transmit personal data.
+
+The project focuses on visualizing interaction flows, decision tension, and group scenario dynamics in a gamified environment.
 
 This application runs entirely in the browser (**Client-Side**), ensuring data privacy as no information is stored or sent to external servers.
 This project is an experimental simulation tool and is not intended for operational decision-making.
