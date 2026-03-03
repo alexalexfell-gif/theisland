@@ -83,7 +83,7 @@ const ROLES_OBJ = [
     { id: "antifaz", n: "Mask (Thief)", c: "uti", p: 1, type: "rol" },
     { id: "guantes", n: "Gloves (Gatherer)", c: "ali", p: 1, type: "rol" },
     { id: "machete", n: "Machete (Fighter)", c: "uti", p: 1, type: "rol" },
-    { id: "maletin", n: "Suitcase (Trader)", c: "uti", p: 1, type: "rol" },
+    { id: "maletin", n: "Suitcase (Merchant)", c: "uti", p: 1, type: "rol" },
     { id: "alianza_mil", n: "Military Alliance (Diplomat)", c: "ori", p: 1, type: "rol" }
 ];
 
@@ -117,6 +117,14 @@ function render() {
                             <li style="color:var(--primary)">🛠️ 3 Utilities (Uti)</li>
                             <li style="color:var(--info)">🧭 2 Orientation (Ori)</li>
                         </ul>
+                        <p><b>Available Roles:</b></p>
+                        <table class="role-intro-table" style="font-size:0.8em;">
+                           <tr><td><b>Gatherer</b></td><td>Collects resources.</td></tr>
+                           <tr><td><b>Thief</b></td><td>Steals items at night.</td></tr>
+                           <tr><td><b>Fighter</b></td><td>Protects and attacks.</td></tr>
+                           <tr><td><b>Diplomat</b></td><td>Negotiates alliances.</td></tr>
+                           <tr><td><b>Merchant</b></td><td>Trades in the market.</td></tr>
+                        </table>
                     </div>
                     <div>
                         <p><b>Dynamic Phases:</b></p>
@@ -227,7 +235,7 @@ function render() {
     else if (Game.paso === 8) {
         ui.innerHTML = `<div class="card"><h2>Step 8: Market</h2><div class="grid">${Game.equipos.map((e, i) => {
             const fin = e.actionsMarket >= 2;
-            return `<div class="card" style="opacity:${fin?'0.7':'1'}"><h3>${e.nombre}</h3><span class="player-name-display">👤 Trader: ${e.rolesNombres['Trader'] || 'Not assigned'}</span><div class="trade-slot"><select id="m_partner_${i}" onchange="updateTradeProposalUI(${i})" ${fin?'disabled':''}><option value="">Partner...</option>${Game.equipos.map((p, pIdx) => (pIdx !== i && p.actionsMarket < 2) ? `<option value="${pIdx}">${p.nombre}</option>` : '').join("")}</select><div id="trade_ui_${i}" style="display:none;"><select id="m_give_${i}">${e.inventario.map((it, idx) => it.type !== 'rol' ? `<option value="${idx}">[${it.c.toUpperCase()}] ${it.n}</option>` : '').join("")}</select><div id="partner_give_area_${i}"></div><button onclick="ejecutarIntercambioDirecto(${i})">Confirm</button></div></div></div>`;
+            return `<div class="card" style="opacity:${fin?'0.7':'1'}"><h3>${e.nombre}</h3><span class="player-name-display">👤 Merchant: ${e.rolesNombres['Merchant'] || 'Not assigned'}</span><div class="trade-slot"><select id="m_partner_${i}" onchange="updateTradeProposalUI(${i})" ${fin?'disabled':''}><option value="">Partner...</option>${Game.equipos.map((p, pIdx) => (pIdx !== i && p.actionsMarket < 2) ? `<option value="${pIdx}">${p.nombre}</option>` : '').join("")}</select><div id="trade_ui_${i}" style="display:none;"><select id="m_give_${i}">${e.inventario.map((it, idx) => it.type !== 'rol' ? `<option value="${idx}">[${it.c.toUpperCase()}] ${it.n}</option>` : '').join("")}</select><div id="partner_give_area_${i}"></div><button onclick="ejecutarIntercambioDirecto(${i})">Confirm</button></div></div></div>`;
         }).join("")}</div><button onclick="Game.paso=9; render()">Finish</button></div>`;
     }
     else if (Game.paso === 9) {
@@ -241,7 +249,7 @@ function render() {
 }
 
 function generateFieldsHTML(n) {
-    let roles = n == 5 ? ["Thief", "Diplomat", "Fighter", "Gatherer", "Trader"] : (n == 4 ? ["Thief/Diplomat", "Fighter", "Gatherer", "Trader"] : ["Thief/Diplomat", "Fighter/Gatherer", "Trader"]);
+    let roles = n == 5 ? ["Thief", "Diplomat", "Fighter", "Gatherer", "Merchant"] : (n == 4 ? ["Thief/Diplomat", "Fighter", "Gatherer", "Merchant"] : ["Thief/Diplomat", "Fighter/Gatherer", "Merchant"]);
     return roles.map(r => `<span class="role-tag">${r}</span><input type="text" class="player-input" data-role="${r}" placeholder="Name...">`).join("");
 }
 
@@ -258,7 +266,7 @@ function saveRegistration() {
             if(r.includes("diplomat")) Game.equipos[i].rolesNombres['Diplomat'] = name;
             if(r.includes("fighter")) Game.equipos[i].rolesNombres['Fighter'] = name;
             if(r.includes("gatherer")) Game.equipos[i].rolesNombres['Gatherer'] = name;
-            if(r.includes("trader")) Game.equipos[i].rolesNombres['Trader'] = name;
+            if(r.includes("merchant")) Game.equipos[i].rolesNombres['Merchant'] = name;
         });
     }
     Game.paso = 3; render();
