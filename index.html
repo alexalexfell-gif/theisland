@@ -158,7 +158,7 @@ function render() {
         ui.innerHTML = `<div class="card"><h2>Step 3.5: Role Assignment</h2><p class="instruction">Select 2 role items (Ctrl+Click).</p><div class="grid">${Game.equipos.map((e, i) => `<div class="card"><h3>${e.nombre}</h3><select id="ro_${i}" multiple style="height:120px;">${ROLES_OBJ.map(o => `<option value="${o.id}">${o.n}</option>`).join("")}</select></div>`).join("")}</div><button onclick="saveRoleInv()">Confirm</button></div>`;
     }
     else if (Game.paso === 4) {
-        ui.innerHTML = `<div class="card"><h2>Step 4: Night Theft</h2><p class="instruction">Strategic action. (Ctrl+Click for victims/items).</p><div class="grid">${Game.equipos.map((e, i) => {
+        ui.innerHTML = `<div class="card"><h2>Step 4: Night Theft</h2><p class="instruction">Strategic action. Defense must be processed first. (Ctrl+Click for victims/items).</p><div class="grid">${Game.equipos.map((e, i) => {
             const hasA = e.inventario.some(it => it.id === 'antifaz');
             return `<div class="card"><h3>${e.nombre} ${hasA ? '🎭' : ''}</h3><span class="player-name-display">👤 Thief: ${e.rolesNombres['Thief'] || 'Not assigned'}</span>${renderMaletinUI(i)}<select id="n_act_${i}" onchange="updateNightUI(${i})"><option value="def">Defend</option><option value="atk">Steal (${hasA?2:1})</option></select><div id="n_ui_${i}" style="display:none"><select id="n_vic_${i}" onchange="loadNightItems(${i})"><option value="">Victim?</option>${Game.equipos.map((v, vi) => i !== vi ? `<option value="${vi}">${v.nombre}</option>` : '').join("")}</select><select id="n_obj_${i}" multiple style="height:80px;"></select></div></div>`;
         }).join("")}</div><button onclick="processNightRobbery()">Execute</button></div>`;
