@@ -37,6 +37,8 @@
         .req-list { list-style: none; padding: 0; font-weight: bold; }
         .phase-list { padding-left: 18px; }
         .phase-list li { margin-bottom: 8px; }
+
+        .disclaimer-box { font-size: 0.65rem; text-align: justify; background: #f1f2f6; padding: 20px; border: 1px solid #d1d8e0; border-radius: 8px; margin: 15px 0; color: #4b6584; line-height: 1.4; max-height: 250px; overflow-y: auto; border-left: 5px solid #778ca3; }
     </style>
 </head>
 <body>
@@ -47,6 +49,26 @@
 </div>
 
 <script>
+const PrivacyKernel = {
+    consentGiven: false,
+    grantConsent() {
+        this.consentGiven = true;
+        Game.paso = 2;
+        render();
+    },
+    wipeSessionData() {
+        if (typeof Game !== 'undefined' && Game.equipos) {
+            Game.equipos.forEach(e => {
+                e.rolesNombres = {};
+                e.inventario = [];
+                e.maletin = [];
+            });
+        }
+    }
+};
+
+window.addEventListener('beforeunload', () => PrivacyKernel.wipeSessionData());
+
 let CATALOGO_BASE = [
     { id: "agua", n: "Water", c: "ali", p: 1 }, { id: "fruta", n: "Fruits", c: "ali", p: 1 }, { id: "latas", n: "Canned Food", c: "ali", p: 1 },
     { id: "botiquin", n: "First Aid Kit", c: "uti", p: 1 }, { id: "cuerda", n: "Rope", c: "uti", p: 1 }, { id: "martillo", n: "Hammer", c: "uti", p: 1 },
@@ -111,7 +133,22 @@ function render() {
                     </div>
                 </div>
             </div>
-            <button id="start_btn" onclick="Game.paso=2; render();">Start Session</button>
+
+            <div class="disclaimer-box">
+                <p style="text-align: center; font-weight: bold; color: #2f3542; margin-bottom: 10px;">LEGAL DISCLAIMER, RELEASE OF LIABILITY AND TERMS OF USE FOR "THE ISLAND"</p>
+                <p><b>1. NATURE OF THE SOFTWARE:</b> "The Island" is a technical support tool for visual and logistical assistance during the execution of a face-to-face group dynamic. This software is not an Applicant Tracking System (ATS), nor a validated psychometric test, and it does not perform automated personality profiling.</p>
+                <p><b>2. INTELLECTUAL PROPERTY:</b> The methodology, game design, role logic, and scoring system are the exclusive intellectual property of <b>Alejandro Scuro Rossi</b>.</p>
+                <p><b>3. PRIVACY AND DATA PROTECTION (GDPR):</b> This software operates under a Zero-Server architecture. All data generated during the session is stored locally in the browser's temporary memory. Upon refreshing or closing the tab, all information is irreversibly destroyed. No personal data is sent to external servers.</p>
+                <p><b>4. LIMITATION OF LIABILITY:</b> Alejandro Scuro Rossi disclaims any and all liability arising from hiring decisions, professional evaluations, or erroneous interpretations of the behaviors observed during the simulation.</p>
+                <p><b>5. ROLE ASSIGNMENT:</b> By continuing, you acknowledge that roles and situations are assigned strictly by chance for recreational purposes. This tool is not intended for formal skill assessment.</p>
+            </div>
+
+            <div style="margin-top:15px;">
+                <input type="checkbox" id="consent_check" onchange="document.getElementById('start_btn').disabled = !this.checked">
+                <label for="consent_check" style="color: #2d3436; font-weight: bold; cursor:pointer;">I have read the disclaimer and provide my consent in accordance with GDPR.</label>
+            </div>
+            
+            <button id="start_btn" disabled onclick="PrivacyKernel.grantConsent()">Start Session</button>
         </div>`;
     }
     else if (Game.paso === 2) {
@@ -225,21 +262,18 @@ function saveRegistration() {
 function updatePactUI() {
     let ps = Array.from(document.querySelectorAll('.p-check:checked')).map(c=>parseInt(c.value));
     Game.equipos.forEach((_, i) => {
-        if(document.getElementById(`pact_choice_${i}`)) document.getElementById(`pact_choice_${i}`).style.display = "block";
+        if(document.getElementById(`pact_choice_${i}`)) document.getElementById(`pact_choice_${i}`).style.display = ps.includes(i) ? "block" : "none";
     });
-    if(ps.length === 2) {
-        let ex = [0,1,2].find(i=>!ps.includes(i));
-        document.getElementById('pacto-area').innerHTML = `<p><b>Pact:</b> ${Game.equipos[ps[0]].nombre} and ${Game.equipos[ps[1]].nombre}. Excluded: ${Game.equipos[ex].nombre}.</p>`;
-    }
 }
 
 function processPact() {
     let ps = Array.from(document.querySelectorAll('.p-check:checked')).map(c=>parseInt(c.value));
     if(ps.length !== 2) return alert("Select 2 teams.");
     Game.equipos.forEach((_, i) => {
-        const s = Array.from(document.getElementById(`pact_sel_${i}`).selectedOptions);
-        s.forEach(opt => Game.equipos[i].inventario.push({...PACTO_OBJ.find(p => p.id === opt.value)}));
-        if(!ps.includes(i)) Game.equipos[i].venganza = true;
+        if(ps.includes(i)) {
+            const s = Array.from(document.getElementById(`pact_sel_${i}`).selectedOptions);
+            s.forEach(opt => Game.equipos[i].inventario.push({...PACTO_OBJ.find(p => p.id === opt.value)}));
+        } else { Game.equipos[i].venganza = true; }
     });
     Game.paso = 6; render();
 }
@@ -264,7 +298,6 @@ function saveInv3() {
 function saveRoleInv() {
     for(let i=0; i<3; i++) {
         const s = Array.from(document.getElementById(`ro_${i}`).selectedOptions);
-        // The specific logic for role count per player remains as previously defined
         s.forEach(o => Game.equipos[i].inventario.push({...ROLES_OBJ.find(x => x.id === o.value)}));
     }
     Game.paso = 4; render();
