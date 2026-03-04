@@ -40,8 +40,7 @@
 
         .disclaimer-box { font-size: 0.65rem; text-align: justify; background: #f1f2f6; padding: 20px; border: 1px solid #d1d8e0; border-radius: 8px; margin: 15px 0; color: #4b6584; line-height: 1.4; max-height: 250px; overflow-y: auto; border-left: 5px solid #778ca3; }
         
-        /* New Styles for Facilitator Guidance */
-        .guidance-content { text-align: left; max-height: 500px; overflow-y: auto; padding-right: 10px; margin-bottom: 20px; }
+        .guidance-content { text-align: left; max-height: 450px; overflow-y: auto; padding-right: 10px; margin-bottom: 20px; }
         .guidance-content h3 { color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 20px; }
         .guidance-content ul { padding-left: 20px; }
         .guidance-content li { margin-bottom: 10px; }
@@ -59,7 +58,7 @@ const PrivacyKernel = {
     consentGiven: false,
     grantConsent() {
         this.consentGiven = true;
-        Game.paso = 2;
+        Game.paso = 1.5; // Proceed to Facilitator Guidance
         render();
     },
     wipeSessionData() {
@@ -94,7 +93,7 @@ const ROLES_OBJ = [
 ];
 
 let Game = {
-    paso: 0, // Starts at Facilitator Guidance
+    paso: 1, // Start with Disclaimer
     equipos: [
         { nombre: "Alpha", inventario: [], maletin: [], actionsMarket: 0, venganza: false, numJugadores: 5, yaUsoGuantes: false, rolesNombres: {} },
         { nombre: "Beta", inventario: [], maletin: [], actionsMarket: 0, venganza: false, numJugadores: 5, yaUsoGuantes: false, rolesNombres: {} },
@@ -108,55 +107,7 @@ function render() {
     const sb = document.getElementById('scoreboard');
     if (Game.paso >= 3 && Game.paso < 9) { sb.style.display = 'grid'; updateScoreboard(); } else { sb.style.display = 'none'; }
 
-    if (Game.paso === 0) {
-        ui.innerHTML = `
-        <div class="card">
-            <h2 style="text-align:center; color:var(--primary);">The Island – Facilitator Guidance</h2>
-            <div class="guidance-content">
-                <p><strong>Purpose:</strong> “The Island” is a team-building simulation designed for experiential learning. It is not an assessment tool and should never be used to evaluate or rank participants professionally. Its value lies in observing group interaction, decision-making patterns, and collaborative dynamics.</p>
-                
-                <h3>1. Before the Session</h3>
-                <ul>
-                    <li><strong>Clarify Purpose:</strong> Explain to participants that the simulation is for learning and discussion, not performance evaluation.</li>
-                    <li><strong>Set Expectations:</strong> Inform participants that all in-scenario decisions are part of a fictional scenario; there are no “right” or “wrong” answers.</li>
-                    <li><strong>Data Privacy:</strong> Ensure participants do not input personal data or sensitive information. Remind them that the simulation runs locally and does not store data.</li>
-                    <li><strong>Accessibility & Comfort:</strong> Check that the simulation environment is accessible to all participants and that no participant feels pressured to participate.</li>
-                </ul>
-
-                <h3>2. During the Simulation</h3>
-                <ul>
-                    <li><strong>Observe, Don’t Judge:</strong> Focus on how the group interacts rather than individual performance.</li>
-                    <li><strong>Monitor Well-Being:</strong> Watch for signs of stress, frustration, or conflict. Pause or adjust the session if participants feel uncomfortable.</li>
-                    <li><strong>Encourage Reflection:</strong> After key decisions, prompt discussion about group dynamics, communication, and collaboration. Keep feedback constructive and non-judgmental.</li>
-                    <li><strong>Maintain Confidentiality:</strong> Avoid sharing individual decisions or behaviors outside the group.</li>
-                </ul>
-
-                <h3>3. After the Simulation</h3>
-                <ul>
-                    <li><strong>Debrief Thoroughly:</strong> Facilitate a discussion on insights, decision-making processes, and team dynamics. Emphasize learning points over outcomes.</li>
-                    <li><strong>Avoid Professional Judgments:</strong> Do not use the results to evaluate participants’ leadership, teamwork, or suitability for roles.</li>
-                    <li><strong>Document Safely:</strong> If you take notes for training purposes, avoid including personal or identifying information.</li>
-                </ul>
-
-                <h3>4. Legal & Ethical Responsibilities</h3>
-                <ul>
-                    <li>Ensure compliance with local employment and data protection laws (e.g., GDPR, CCPA, LGPD).</li>
-                    <li>Participants’ safety, well-being, and consent are your responsibility as facilitator.</li>
-                    <li>By using the tool, you accept responsibility for ethical management of the simulation and any outcomes.</li>
-                </ul>
-
-                <h3>5. Recommended Best Practices</h3>
-                <ul>
-                    <li>Keep sessions short and focused to avoid participant fatigue.</li>
-                    <li>Encourage equal participation and inclusion.</li>
-                    <li>Emphasize that the simulation is a learning tool, not a competitive assessment.</li>
-                    <li>Use the simulation in a professional, structured environment with clear facilitation.</li>
-                </ul>
-            </div>
-            <button onclick="Game.paso=1; render();">Accept & Continue</button>
-        </div>`;
-    }
-    else if (Game.paso === 1) {
+    if (Game.paso === 1) {
         ui.innerHTML = `
         <div class="card" style="text-align:center">
             <h1>🏝️ THE ISLAND</h1>
@@ -198,29 +149,61 @@ function render() {
 
          <div style="font-size: 0.7rem; text-align: justify; background: #f1f2f6; padding: 20px; border: 1px solid #d1d8e0; border-radius: 8px; margin: 15px 0; color: #4b6584; line-height: 1.5; max-height: 250px; overflow-y: auto; border-left: 5px solid #778ca3;">
                 <p style="text-align: center; font-weight: bold; color: #2f3542; margin-bottom: 10px;">LEGAL NOTICE, DISCLAIMER AND TERMS OF USE OF "THE ISLAND"</p>
-                
-                <p><b>1. NATURE AND PURPOSE OF THE SOFTWARE:</b> "The Island" is a visual and logistical support tool designed to facilitate group dynamics of a training, experiential, or skill-development nature. It is NOT an automated assessment system (ATS), nor a validated psychometric test, and it does not generate personality profiles autonomously. Its purpose is to serve as support for professionals (educators, facilitators, HR, group psychologists) in managing simulations; the interpretation and application of results are the sole responsibility of the professional user.</p>
-                
+                <p><b>1. NATURE AND PURPOSE OF THE SOFTWARE:</b> "The Island" is a visual and logistical support tool designed to facilitate group dynamics of a training, experiential, or skill-development nature. It is NOT an automated assessment system (ATS), nor a validated psychometric test, and it does not generate personality profiles autonomously.</p>
                 <p><b>2. INTELLECTUAL PROPERTY:</b> The methodology, game design, role logic, and scoring system are the exclusive intellectual property of <b>Alejandro Scuro Rossi</b>.</p>
-                
-                <p><b>3. PRIVACY AND DATA PROTECTION (GDPR):</b> "The Island" operates under a Zero-Server architecture, meaning it does not store participants' personal data on its servers. All information generated during the dynamic is ephemeral and irreversibly destroyed upon refreshing or closing the browser tab. The professional using the tool is the <b>SOLELY RESPONSIBLE</b> for informing participants about the processing of their personal data within the context of the dynamic and for complying with all obligations of the General Data Protection Regulation (GDPR) and applicable national legislation.</p>
-                
-                <p><b>4. DISCLAIMER:</b> Alejandro Scuro Rossi expressly disclaims any and all liability for decisions, conclusions, or interpretations made by professional users based on the results or experience of "The Island" dynamic. This includes, but is not limited to, hiring decisions, personnel development, or any other professional application. The use of "The Island" is as a support tool, and the responsibility for its application, interpretation, and derived consequences rests entirely with the professional user.</p>
-                
-                <p><b>5. ACCEPTANCE AND RESPONSIBILITY OF THE PROFESSIONAL USER:</b> By clicking "Start Session", the professional user accepts and acknowledges being the sole and exclusive party responsible for informing participants about the use of their data and the ethical management of the resulting information.</p>
-                <p>Professional users are solely responsible for ensuring compliance with all applicable laws and regulations, including GDPR, CCPA, LGPD, and local employment or data protection legislation.
-
-Professional users should ensure that scenarios are conducted in a manner that respects participants’ well-being, avoids undue stress or discomfort, and does not result in discriminatory or unfair treatment.
-
-In no event shall Alejandro Scuro Rossi be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from the use of “The Island,” including but not limited to workplace or professional outcomes.</p> 
+                <p><b>3. PRIVACY AND DATA PROTECTION (GDPR):</b> "The Island" operates under a Zero-Server architecture, meaning it does not store participants' personal data on its servers. All information generated during the dynamic is ephemeral and irreversibly destroyed upon refreshing or closing the browser tab.</p>
+                <p><b>4. DISCLAIMER:</b> Alejandro Scuro Rossi expressly disclaims any and all liability for decisions, conclusions, or interpretations made by professional users based on the results or experience of "The Island" dynamic.</p>
+                <p><b>5. ACCEPTANCE AND RESPONSIBILITY:</b> By clicking "Start Session", the professional user accepts and acknowledges being the sole and exclusive party responsible for informing participants about the use of their data and the ethical management of the resulting information.</p>
             </div>
 
             <div style="margin-top:15px;">
                 <input type="checkbox" id="consent_check" onchange="document.getElementById('start_btn').disabled = !this.checked">
                 <label for="consent_check" style="color: #2d3436; font-weight: bold; cursor:pointer;">I have read the disclaimer and provide my consent in accordance with GDPR.</label>
             </div>
-            
             <button id="start_btn" disabled onclick="PrivacyKernel.grantConsent()">Start Session</button>
+        </div>`;
+    }
+    else if (Game.paso === 1.5) {
+        ui.innerHTML = `
+        <div class="card">
+            <h2 style="text-align:center; color:var(--primary);">The Island – Facilitator Guidance</h2>
+            <div class="guidance-content">
+                <p><strong>Purpose:</strong> “The Island” is a team-building simulation designed for experiential learning. It is not an assessment tool and should never be used to evaluate or rank participants professionally. Its value lies in observing group interaction, decision-making patterns, and collaborative dynamics.</p>
+                <h3>1. Before the Session</h3>
+                <ul>
+                    <li><strong>Clarify Purpose:</strong> Explain to participants that the simulation is for learning and discussion, not performance evaluation.</li>
+                    <li><strong>Set Expectations:</strong> Inform participants that all in-scenario decisions are part of a fictional scenario; there are no “right” or “wrong” answers.</li>
+                    <li><strong>Data Privacy:</strong> Ensure participants do not input personal data or sensitive information. Remind them that the simulation runs locally and does not store data.</li>
+                    <li><strong>Accessibility & Comfort:</strong> Check that the simulation environment is accessible to all participants and that no participant feels pressured to participate.</li>
+                </ul>
+                <h3>2. During the Simulation</h3>
+                <ul>
+                    <li><strong>Observe, Don’t Judge:</strong> Focus on how the group interacts rather than individual performance.</li>
+                    <li><strong>Monitor Well-Being:</strong> Watch for signs of stress, frustration, or conflict. Pause or adjust the session if participants feel uncomfortable.</li>
+                    <li><strong>Encourage Reflection:</strong> After key decisions, prompt discussion about group dynamics, communication, and collaboration. Keep feedback constructive and non-judgmental.</li>
+                    <li><strong>Maintain Confidentiality:</strong> Avoid sharing individual decisions or behaviors outside the group.</li>
+                </ul>
+                <h3>3. After the Simulation</h3>
+                <ul>
+                    <li><strong>Debrief Thoroughly:</strong> Facilitate a discussion on insights, decision-making processes, and team dynamics. Emphasize learning points over outcomes.</li>
+                    <li><strong>Avoid Professional Judgments:</strong> Do not use the results to evaluate participants’ leadership, teamwork, or suitability for roles.</li>
+                    <li><strong>Document Safely:</strong> If you take notes for training purposes, avoid including personal or identifying information.</li>
+                </ul>
+                <h3>4. Legal & Ethical Responsibilities</h3>
+                <ul>
+                    <li>Ensure compliance with local employment and data protection laws (e.g., GDPR, CCPA, LGPD).</li>
+                    <li>Participants’ safety, well-being, and consent are your responsibility as facilitator.</li>
+                    <li>By using the tool, you accept responsibility for ethical management of the simulation and any outcomes.</li>
+                </ul>
+                <h3>5. Recommended Best Practices</h3>
+                <ul>
+                    <li>Keep sessions short and focused to avoid participant fatigue.</li>
+                    <li>Encourage equal participation and inclusion.</li>
+                    <li>Emphasize that the simulation is a learning tool, not a competitive assessment.</li>
+                    <li>Use the simulation in a professional, structured environment with clear facilitation.</li>
+                </ul>
+            </div>
+            <button onclick="Game.paso=2; render();">Continue to Registration</button>
         </div>`;
     }
     else if (Game.paso === 2) {
@@ -243,11 +226,9 @@ In no event shall Alejandro Scuro Rossi be liable for any direct, indirect, inci
         ui.innerHTML = `
         <div class="card">
             <h2>Step 3.2: Introduction to Role Objects</h2>
-            <p>In this system, <b>Role Objects</b> are functional components that modify a player's capabilities during specific game phases. Each object acts as a permanent buff or a conditional rule modifier.</p>
+            <p>In this system, <b>Role Objects</b> are functional components that modify a player's capabilities during specific game phases.</p>
             <table class="role-intro-table">
-                <thead>
-                    <tr><th>Role Item</th><th>Game Mechanic</th></tr>
-                </thead>
+                <thead><tr><th>Role Item</th><th>Game Mechanic</th></tr></thead>
                 <tbody>
                     <tr><td><b>Gloves</b></td><td><b>Passive:</b> Allows the Gatherer to collect <b>1 extra item</b> during the search phase.</td></tr>
                     <tr><td><b>Suitcase</b></td><td><b>Defense:</b> Automatically protects <b>2 items</b> from being stolen on every <b>Step</b>.</td></tr>
@@ -269,7 +250,7 @@ In no event shall Alejandro Scuro Rossi be liable for any direct, indirect, inci
         }).join("")}</div><button onclick="processNightRobbery()">Execute</button></div>`;
     }
     else if (Game.paso === 5) {
-        ui.innerHTML = `<div class="card"><h2>Step 5: The Pact</h2><p class="instruction">Form a pact (check 2 items). The excluded team receives 1 item and <b>Revenge</b>.</p><div class="grid">${Game.equipos.map((e,i)=>`<div class="card"><h3>${e.nombre}</h3><span class="player-name-display">👤 Diplomat: ${e.rolesNombres['Diplomat'] || 'Not assigned'}</span>${renderMaletinUI(i)}<input type="checkbox" class="p-check" value="${i}" id="chk${i}" onchange="updatePactUI()"><label for="chk${i}"> Joins Pact</label><div id="pact_choice_${i}" style="display:none; margin-top:10px;"><b>Choice:</b><select id="pact_sel_${i}" multiple style="height:80px;">${PACTO_OBJ.map(o=>`<option value="${o.id}">[${o.c.toUpperCase()}] ${o.n}</option>`).join("")}</select></div><div id="vengeance_choice_${i}" style="display:none; margin-top:10px; color:var(--danger);"><b>Revenge Reward:</b><select id="veng_sel_${i}">${PACTO_OBJ.map(o=>`<option value="${o.id}">[${o.c.toUpperCase()}] ${o.n}</option>`).join("")}</select></div></div>`).join("")}</div><button onclick="processPact()">Close Pact</button></div>`;
+        ui.innerHTML = `<div class="card"><h2>Step 5: The Pact</h2><p class="instruction">Form a pact (check 2 items).</p><div class="grid">${Game.equipos.map((e,i)=>`<div class="card"><h3>${e.nombre}</h3><span class="player-name-display">👤 Diplomat: ${e.rolesNombres['Diplomat'] || 'Not assigned'}</span>${renderMaletinUI(i)}<input type="checkbox" class="p-check" value="${i}" id="chk${i}" onchange="updatePactUI()"><label for="chk${i}"> Joins Pact</label><div id="pact_choice_${i}" style="display:none; margin-top:10px;"><b>Choice:</b><select id="pact_sel_${i}" multiple style="height:80px;">${PACTO_OBJ.map(o=>`<option value="${o.id}">[${o.c.toUpperCase()}] ${o.n}</option>`).join("")}</select></div><div id="vengeance_choice_${i}" style="display:none; margin-top:10px; color:var(--danger);"><b>Revenge Reward:</b><select id="veng_sel_${i}">${PACTO_OBJ.map(o=>`<option value="${o.id}">[${o.c.toUpperCase()}] ${o.n}</option>`).join("")}</select></div></div>`).join("")}</div><button onclick="processPact()">Close Pact</button></div>`;
         updatePactUI();
     }
     else if (Game.paso === 6) {
@@ -314,10 +295,8 @@ function generateFieldsHTML(n) {
     if (n == 5) {
         roles = ["Thief", "Diplomat", "Fighter", "Gatherer", "Merchant"];
     } else if (n == 4) {
-        // User rule: if 4 players, first has 2 roles
         roles = ["Thief/Diplomat", "Fighter", "Gatherer", "Merchant"];
     } else if (n == 3) {
-        // User rule: if 3 players, first two have 2 roles
         roles = ["Thief/Diplomat", "Fighter/Gatherer", "Merchant"];
     }
     return roles.map(r => `<span class="role-tag">${r}</span><input type="text" class="player-input" data-role="${r}" placeholder="Name...">`).join("");
@@ -355,9 +334,7 @@ function updatePactUI() {
 function processPact() {
     let ps = Array.from(document.querySelectorAll('.p-check:checked')).map(c=>parseInt(c.value));
     if(ps.length !== 2) return alert("Select exactly 2 teams.");
-    
     Game.pactTeams = ps;
-
     Game.equipos.forEach((e, i) => {
         if(ps.includes(i)) {
             const selEl = document.getElementById(`pact_sel_${i}`);
@@ -367,9 +344,7 @@ function processPact() {
             e.venganza = false;
         } else { 
             const vengSel = document.getElementById(`veng_sel_${i}`);
-            if(vengSel) {
-                e.inventario.push({...PACTO_OBJ.find(p => p.id === vengSel.value)});
-            }
+            if(vengSel) e.inventario.push({...PACTO_OBJ.find(p => p.id === vengSel.value)});
             e.venganza = true; 
         }
     });
